@@ -1,49 +1,63 @@
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import { invoke } from "@tauri-apps/api/core";
+import FlowEditor from "./components/FlowEditor";
 import "./App.css";
 
 function App() {
-  const [greetMsg, setGreetMsg] = useState("");
-  const [name, setName] = useState("");
-
-  async function greet() {
-    // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-    setGreetMsg(await invoke("greet", { name }));
-  }
+  const [activeTab, setActiveTab] = useState("editor");
 
   return (
-    <main className="container">
-      <h1>Welcome to Tauri + React</h1>
-
-      <div className="row">
-        <a href="https://vitejs.dev" target="_blank" rel="noopener noreferrer">
-          <img src="/vite.svg" className="logo vite" alt="Vite logo" />
-        </a>
-        <a href="https://tauri.app" target="_blank" rel="noopener noreferrer">
-          <img src="/tauri.svg" className="logo tauri" alt="Tauri logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank" rel="noopener noreferrer">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <main className="app">
+      <header className="app-header">
+        <h1>Creator Center</h1>
+        <nav className="app-nav">
+          <button
+            className={activeTab === "editor" ? "active" : ""}
+            onClick={() => setActiveTab("editor")}
+          >
+            Node Editor
+          </button>
+          <button
+            className={activeTab === "templates" ? "active" : ""}
+            onClick={() => setActiveTab("templates")}
+          >
+            Templates
+          </button>
+          <button
+            className={activeTab === "settings" ? "active" : ""}
+            onClick={() => setActiveTab("settings")}
+          >
+            Settings
+          </button>
+        </nav>
+      </header>
+      <div className="app-content">
+        {activeTab === "editor" && <FlowEditor />}
+        {activeTab === "templates" && (
+          <div className="templates-panel">
+            <h2>创作模板</h2>
+            <div className="template-grid">
+              <div className="template-card">
+                <h3>文章创作</h3>
+                <p>结构化文章写作流程</p>
+              </div>
+              <div className="template-card">
+                <h3>视频脚本</h3>
+                <p>短视频脚本模板</p>
+              </div>
+              <div className="template-card">
+                <h3>音乐创作</h3>
+                <p>歌曲结构与节拍</p>
+              </div>
+            </div>
+          </div>
+        )}
+        {activeTab === "settings" && (
+          <div className="settings-panel">
+            <h2>设置</h2>
+            <p>Coming soon...</p>
+          </div>
+        )}
       </div>
-      <p>Click on the Tauri, Vite, and React logos to learn more.</p>
-
-      <form
-        className="row"
-        onSubmit={(e) => {
-          e.preventDefault();
-          greet();
-        }}
-      >
-        <input
-          id="greet-input"
-          onChange={(e) => setName(e.currentTarget.value)}
-          placeholder="Enter a name..."
-        />
-        <button type="submit">Greet</button>
-      </form>
-      <p>{greetMsg}</p>
     </main>
   );
 }
